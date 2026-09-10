@@ -1,0 +1,466 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ludo Board</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #222;
+    font-family: Arial, sans-serif;
+}
+
+/* MAIN BOARD */
+
+.board {
+    width: min(90vw, 650px);
+    height: min(90vw, 650px);
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+    grid-template-rows: repeat(15, 1fr);
+    border: 6px solid #111;
+    background: white;
+}
+
+/* EVERY CELL */
+
+.cell {
+    border: 1px solid #222;
+    background: #fff;
+    position: relative;
+}
+
+/* HOME AREAS */
+
+.home {
+    border: 1px solid #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15%;
+}
+
+/* RED */
+
+.red-home {
+    grid-column: 1 / 7;
+    grid-row: 1 / 7;
+    background: #e53935;
+}
+
+/* GREEN */
+
+.green-home {
+    grid-column: 10 / 16;
+    grid-row: 1 / 7;
+    background: #43a047;
+}
+
+/* BLUE */
+
+.blue-home {
+    grid-column: 1 / 7;
+    grid-row: 10 / 16;
+    background: #1e88e5;
+}
+
+/* YELLOW */
+
+.yellow-home {
+    grid-column: 10 / 16;
+    grid-row: 10 / 16;
+    background: #fdd835;
+}
+
+/* HOME INNER BOX */
+
+.inner {
+    width: 100%;
+    height: 100%;
+    background: white;
+    border: 2px solid #222;
+    border-radius: 12px;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 12%;
+    padding: 12%;
+}
+
+/* PAWNS */
+
+.pawn {
+    border-radius: 50%;
+    border: 3px solid #222;
+    box-shadow: inset 0 0 0 5px rgba(255,255,255,.35);
+}
+
+/* RED PAWNS */
+
+.red-home .pawn {
+    background: #e53935;
+}
+
+/* GREEN PAWNS */
+
+.green-home .pawn {
+    background: #43a047;
+}
+
+/* BLUE PAWNS */
+
+.blue-home .pawn {
+    background: #1e88e5;
+}
+
+/* YELLOW PAWNS */
+
+.yellow-home .pawn {
+    background: #fdd835;
+}
+
+
+/* COLORED PATHS */
+
+/* RED PATH */
+
+.red-path {
+    background: #ef5350;
+}
+
+/* GREEN PATH */
+
+.green-path {
+    background: #66bb6a;
+}
+
+/* BLUE PATH */
+
+.blue-path {
+    background: #42a5f5;
+}
+
+/* YELLOW PATH */
+
+.yellow-path {
+    background: #ffee58;
+}
+
+
+/* CENTER */
+
+.center {
+    grid-column: 7 / 10;
+    grid-row: 7 / 10;
+
+    position: relative;
+    overflow: hidden;
+
+    background: conic-gradient(
+        from 45deg,
+        #43a047 0deg 90deg,
+        #fdd835 90deg 180deg,
+        #1e88e5 180deg 270deg,
+        #e53935 270deg 360deg
+    );
+
+    border: 2px solid #111;
+}
+
+/* CENTER WHITE DIAMOND */
+
+.center::after {
+    content: "";
+    position: absolute;
+
+    width: 0;
+    height: 0;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    border-left: 45px solid transparent;
+    border-right: 45px solid transparent;
+    border-top: 45px solid transparent;
+    border-bottom: 45px solid white;
+}
+
+
+/* SAFE SPOTS */
+
+.safe::after {
+    content: "★";
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    font-size: clamp(12px, 2vw, 22px);
+    color: #333;
+}
+
+
+/* START SPOTS */
+
+.start-red {
+    background: #e53935 !important;
+}
+
+.start-green {
+    background: #43a047 !important;
+}
+
+.start-blue {
+    background: #1e88e5 !important;
+}
+
+.start-yellow {
+    background: #fdd835 !important;
+}
+
+
+/* MOBILE */
+
+@media(max-width:500px) {
+
+    .board {
+        border-width: 3px;
+    }
+
+    .inner {
+        gap: 8%;
+        padding: 10%;
+    }
+
+    .pawn {
+        border-width: 2px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="board" id="board">
+
+    <!-- RED HOME -->
+    <div class="home red-home">
+        <div class="inner">
+            <div class="pawn"></div>
+            <div class="pawn"></div>
+            <div class="pawn"></div>
+            <div class="pawn"></div>
+        </div>
+    </div>
+
+    <!-- GREEN HOME -->
+    <div class="home green-home">
+        <div class="inner">
+            <div class="pawn"></div>
+            <div class="pawn"></div>
+            <div class="pawn"></div>
+            <div class="pawn"></div>
+        </div>
+    </div>
+
+    <!-- BLUE HOME -->
+    <div class="home blue-home">
+        <div class="inner">
+            <div class="pawn"></div>
+            <div class="pawn"></div>
+            <div class="pawn"></div>
+            <div class="pawn"></div>
+        </div>
+    </div>
+
+    <!-- YELLOW HOME -->
+    <div class="home yellow-home">
+        <div class="inner">
+            <div class="pawn"></div>
+            <div class="pawn"></div>
+            <div class="pawn"></div>
+            <div class="pawn"></div>
+        </div>
+    </div>
+
+    <!-- CENTER -->
+    <div class="center"></div>
+
+</div>
+
+
+<script>
+
+const board = document.getElementById("board");
+
+/*
+    15 × 15 LUDO BOARD
+
+    Homes occupy:
+    RED    = top-left
+    GREEN  = top-right
+    BLUE   = bottom-left
+    YELLOW = bottom-right
+
+    The remaining cells create the playing paths.
+*/
+
+
+/* CREATE CELLS */
+
+for (let row = 1; row <= 15; row++) {
+
+    for (let col = 1; col <= 15; col++) {
+
+        /*
+            Skip home areas
+        */
+
+        const redHome =
+            row <= 6 && col <= 6;
+
+        const greenHome =
+            row <= 6 && col >= 10;
+
+        const blueHome =
+            row >= 10 && col <= 6;
+
+        const yellowHome =
+            row >= 10 && col >= 10;
+
+        const center =
+            row >= 7 && row <= 9 &&
+            col >= 7 && col <= 9;
+
+
+        if (
+            redHome ||
+            greenHome ||
+            blueHome ||
+            yellowHome ||
+            center
+        ) {
+            continue;
+        }
+
+
+        const cell = document.createElement("div");
+
+        cell.classList.add("cell");
+
+
+        /*
+            HORIZONTAL PATHS
+        */
+
+        if (row >= 7 && row <= 9) {
+
+            /*
+                RED side
+            */
+
+            if (col >= 2 && col <= 6) {
+                cell.classList.add("red-path");
+            }
+
+            /*
+                YELLOW side
+            */
+
+            if (col >= 10 && col <= 14) {
+                cell.classList.add("yellow-path");
+            }
+        }
+
+
+        /*
+            VERTICAL PATHS
+        */
+
+        if (col >= 7 && col <= 9) {
+
+            /*
+                GREEN side
+            */
+
+            if (row >= 2 && row <= 6) {
+                cell.classList.add("green-path");
+            }
+
+            /*
+                BLUE side
+            */
+
+            if (row >= 10 && row <= 14) {
+                cell.classList.add("blue-path");
+            }
+        }
+
+
+        /*
+            START POSITIONS
+        */
+
+        if (row === 8 && col === 2) {
+            cell.classList.add("start-red");
+        }
+
+        if (row === 2 && col === 8) {
+            cell.classList.add("start-green");
+        }
+
+        if (row === 14 && col === 8) {
+            cell.classList.add("start-blue");
+        }
+
+        if (row === 8 && col === 14) {
+            cell.classList.add("start-yellow");
+        }
+
+
+        /*
+            SAFE SPOTS
+        */
+
+        if (
+            (row === 8 && col === 3) ||
+            (row === 3 && col === 8) ||
+            (row === 8 && col === 13) ||
+            (row === 13 && col === 8)
+        ) {
+            cell.classList.add("safe");
+        }
+
+
+        /*
+            Put cell at exact grid position
+        */
+
+        cell.style.gridColumn = col;
+        cell.style.gridRow = row;
+
+        board.appendChild(cell);
+    }
+}
+
+</script>
+
+</body>
+</html>
