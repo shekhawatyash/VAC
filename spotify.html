@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spotify Clone — Figma Recreation</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+
+  <div class="title-row">
+    <div>Spotify Clone</div>
+    <div>Playlist</div>
+  </div>
+
+  <div class="screens">
+
+    <!-- HOME SCREEN -->
+    <section class="screen home-screen">
+      <aside class="side">
+        <div class="spotify"><span class="spotify-mark">≋</span><b>Spotify</b></div>
+        <nav>
+          <a class="active">⌂ <span>Home</span></a>
+          <a>⌕ <span>Search</span></a>
+          <a>▥ <span>Your Library</span></a>
+        </nav>
+        <nav class="lower-nav">
+          <a>⊞ <span>Create Playlist</span></a>
+          <a>♥ <span>Liked Songs</span></a>
+        </nav>
+        <div class="tiny-links">
+          <div>Legal &nbsp;&nbsp; Privacy Center &nbsp;&nbsp; Privacy Policy</div>
+          <div>Cookies &nbsp;&nbsp; About &nbsp;&nbsp; Ads</div>
+          <button>◎ English</button>
+        </div>
+      </aside>
+
+      <div class="content">
+        <div class="auth"><span>Sign up</span><button>Log in</button></div>
+
+        <div class="heading"><h2>Focus</h2><span>Show all</span></div>
+        <div class="grid">
+          <article class="card" data-target="deep-focus">
+            <img src="assets/peaceful.jpg"><h3>Peaceful Piano</h3>
+            <p>Peaceful piano to help you slow down, breathe, and...</p>
+          </article>
+          <article class="card" data-target="deep-focus">
+            <img src="assets/deep.jpg"><h3>Deep Focus</h3>
+            <p>Keep calm and focus with ambient and post-rock music.</p>
+          </article>
+          <article class="card" data-target="deep-focus">
+            <img src="assets/instrumental.jpg"><h3>Instrumental Study</h3>
+            <p>Focus with low-key music to block out distractions.</p>
+          </article>
+          <article class="card" data-target="deep-focus">
+            <img src="assets/focusflow.jpg"><h3>Focus Flow</h3>
+            <p>Uplifting instrumental hip hop beats.</p>
+          </article>
+          <article class="card" data-target="deep-focus">
+            <img src="assets/beats.jpg"><h3>Beats to think to</h3>
+            <p>Faint chill beat techno and folk house.</p>
+          </article>
+        </div>
+
+        <div class="heading playlist-heading"><h2>Spotify Playlists</h2><span>Show all</span></div>
+        <div class="grid">
+          <article class="card">
+            <img src="assets/todays.jpg"><h3>Today's Top Hits</h3>
+            <p>Harry Styles is on top of the Hot 50...</p>
+          </article>
+          <article class="card">
+            <img src="assets/rap.jpg"><h3>RapCaviar</h3>
+            <p>New music from Lil Baby, Megan Thee...</p>
+          </article>
+          <article class="card">
+            <img src="assets/allout.jpg"><h3>All Out 2010s</h3>
+            <p>The biggest songs of the 2010s.</p>
+          </article>
+          <article class="card">
+            <img src="assets/rock.jpg"><h3>Rock Classics</h3>
+            <p>Rock legends & iconic tracks from the...</p>
+          </article>
+          <article class="card">
+            <img src="assets/chill.jpg"><h3>Chill Hits</h3>
+            <p>Kick back to the best new and recent chill hits.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLAYLIST SCREEN -->
+    <section class="screen playlist-screen" id="deep-focus">
+      <aside class="side">
+        <div class="spotify"><span class="spotify-mark">≋</span><b>Spotify</b></div>
+        <nav>
+          <a>⌂ <span>Home</span></a>
+          <a>⌕ <span>Search</span></a>
+          <a>▥ <span>Your Library</span></a>
+        </nav>
+        <nav class="lower-nav">
+          <a>⊞ <span>Create Playlist</span></a>
+          <a>♥ <span>Liked Songs</span></a>
+        </nav>
+        <div class="tiny-links">
+          <div>Legal &nbsp;&nbsp; Privacy Center &nbsp;&nbsp; Privacy Policy</div>
+          <div>Cookies &nbsp;&nbsp; About &nbsp;&nbsp; Ads</div>
+          <button>◎ English</button>
+        </div>
+      </aside>
+
+      <div class="playlist-content">
+        <div class="auth"><span>Sign up</span><button>Log in</button></div>
+        <div class="hero">
+          <img src="assets/deep.jpg">
+          <div class="hero-text">
+            <div class="overline">Playlist</div>
+            <h1>Deep Focus</h1>
+            <p>Keep calm and focus with ambient and post-rock music.</p>
+            <div class="meta"><i>●</i> Spotify&nbsp;&nbsp;•&nbsp;&nbsp;3,945,600 likes&nbsp;&nbsp;•&nbsp;&nbsp;252 songs, about 1 hr</div>
+          </div>
+        </div>
+
+        <div class="playlist-actions">
+          <button class="green-play" id="play">▶</button>
+          <button>♡</button><button>•••</button>
+        </div>
+
+        <div class="tracks">
+          <div class="tr head"><span>#</span><span>Title</span><span>Album</span><span>Date added</span><span>◷</span></div>
+          <div class="tr"><span>1</span><span class="song"><img src="assets/track1.jpg"><b>So Far So Good</b><small>Sam Of Thy</small></span><span>Silent Hills</span><span>1 week ago</span><span>2:21</span></div>
+          <div class="tr"><span>2</span><span class="song"><img src="assets/track2.jpg"><b>Apricity</b><small>Insane 2k</small></span><span>Apricity</span><span>1 week ago</span><span>2:38</span></div>
+          <div class="tr"><span>3</span><span class="song"><img src="assets/track3.jpg"><b>Solatium</b><small>Indiem Sun</small></span><span>Solatium</span><span>1 week ago</span><span>2:06</span></div>
+          <div class="tr"><span>4</span><span class="song"><img src="assets/track4.jpg"><b>efflorescence</b><small>Far & Beyond</small></span><span>efflorescence</span><span>1 week ago</span><span>2:23</span></div>
+          <div class="tr"><span>5</span><span class="song"><img src="assets/track5.jpg"><b>Gather My Thoughts</b><small>Sweet Cry</small></span><span>Gather My Thoughts</span><span>1 week ago</span><span>3:03</span></div>
+          <div class="tr"><span>6</span><span class="song"><img src="assets/track6.jpg"><b>Fresh Paint</b><small>Deep Focus</small></span><span>Fresh Paint</span><span>1 week ago</span><span>2:44</span></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script>
+const play = document.getElementById('play');
+play.addEventListener('click', () => {
+  play.textContent = play.textContent === '▶' ? 'Ⅱ' : '▶';
+});
+document.querySelectorAll('.card[data-target]').forEach(card => {
+  card.addEventListener('click', () => {
+    document.getElementById(card.dataset.target).scrollIntoView({behavior:'smooth', inline:'center'});
+  });
+});
+</script>
+</body>
+</html>
