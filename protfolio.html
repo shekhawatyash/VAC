@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yash Vardhan Singh - Responsive Gallery</title>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  
+  <style>
+    :root {
+      --bg: #050507;
+      --cyan: #00f3ff;
+      --pink: #ff007f;
+      --glass: rgba(20, 20, 25, 0.6);
+      --border: rgba(255, 255, 255, 0.1);
+    }
+
+    * { box-sizing: border-box; }
+
+    body, html {
+      margin: 0; padding: 0;
+      width: 100vw; height: 100vh;
+      background-color: var(--bg);
+      background-image: radial-gradient(circle at center, #111 0%, #000 100%);
+      font-family: 'Courier New', Courier, monospace;
+      color: #fff;
+      overflow: hidden;
+      /* Prevents pull-to-refresh on mobile browsers */
+      touch-action: none; 
+    }
+
+    .viewport {
+      position: absolute; top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      perspective: 1200px;
+    }
+
+    .camera {
+      width: 100%; height: 100%;
+      position: absolute;
+      transform-style: preserve-3d;
+      transform: translateZ(1000px); /* Start outside */
+    }
+
+    .clickable {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      /* Removes blue tap highlight on mobile */
+      -webkit-tap-highlight-color: transparent; 
+    }
+    
+    @media (hover: hover) {
+      .clickable:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 30px var(--cyan);
+      }
+    }
+
+    /* =========================================
+       EXTERIOR: THE PORTAL (Z = 0)
+       ========================================= */
+    .portal-container {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%) translateZ(0px);
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    .nameplate {
+      font-size: clamp(1.5rem, 4vw, 2.5rem); 
+      letter-spacing: clamp(3px, 1vw, 8px);
+      margin-bottom: 40px; text-transform: uppercase;
+      text-shadow: 0 0 20px var(--cyan);
+      border-bottom: 2px solid var(--cyan);
+      padding-bottom: 10px;
+      text-align: center;
+    }
+
+    .door {
+      width: 300px; height: 500px;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      border: 2px solid var(--cyan);
+      box-shadow: 0 0 40px rgba(0, 243, 255, 0.2), inset 0 0 20px rgba(0, 243, 255, 0.2);
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .door::before {
+      content: 'ENTER GALLERY';
+      font-size: 1.5rem; letter-spacing: 4px; color: var(--cyan);
+      animation: pulse 2s infinite;
+      text-align: center;
+    }
+
+    /* =========================================
+       THE AISLE (Z = -500 to -3000)
+       ========================================= */
+    .floor-grid {
+      position: absolute; top: 50%; left: 50%;
+      width: 100vw; height: 4000px;
+      transform: translate(-50%, -50%) rotateX(90deg) translateZ(-400px) translateY(-1000px);
+      background: 
+        linear-gradient(to right, rgba(0,243,255,0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0,243,255,0.05) 1px, transparent 1px);
+      background-size: 100px 100px;
+      border-left: 2px solid var(--cyan);
+      border-right: 2px solid var(--cyan);
+      box-shadow: 0 0 50px rgba(0,243,255,0.1);
+    }
+
+    .greeter {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%) translateZ(-2500px);
+      text-align: center;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .greeter svg {
+      width: clamp(100px, 15vw, 150px); 
+      height: clamp(100px, 15vw, 150px);
+      filter: drop-shadow(0 0 20px var(--cyan));
+      margin-bottom: 20px;
+    }
+
+    .greeter h2 {
+      font-size: clamp(1.8rem, 4vw, 2.5rem); 
+      letter-spacing: 5px; color: #fff;
+      text-shadow: 0 0 15px var(--cyan); margin: 0;
+    }
+
+    /* Room Navigation Points */
+    .nav-node {
+      position: absolute; top: 50%; left: 50%;
+      width: 300px; padding: 20px;
+      background: var(--glass); backdrop-filter: blur(5px);
+      border: 1px solid var(--border);
+      text-align: center; border-radius: 10px;
+    }
+
+    .node-left { transform: translate(-50%, -50%) translateZ(-1200px) translateX(-400px) rotateY(45deg); }
+    .node-right { transform: translate(-50%, -50%) translateZ(-1200px) translateX(400px) rotateY(-45deg); border-color: var(--pink); }
+
+    /* =========================================
+       ROOM 1: PROJECTS (Left Wall)
+       ========================================= */
+    .room-left {
+      position: absolute; top: 50%; left: 50%;
+      width: 1200px; height: 700px;
+      transform: translate(-50%, -50%) translateZ(-1200px) translateX(-1000px) rotateY(90deg);
+      display: flex; align-items: center; justify-content: center; gap: 80px;
+    }
+
+    .project-frame {
+      width: 350px; height: 500px;
+      background: rgba(10, 10, 15, 0.8);
+      border: 1px solid var(--cyan);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 243, 255, 0.1);
+      padding: 30px; border-radius: 15px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      text-decoration: none; color: #fff;
+    }
+
+    .project-frame h3 { font-size: 2rem; color: var(--cyan); margin-top: 0; }
+    .project-frame p { font-size: 1.1rem; line-height: 1.6; color: #aaa; }
+    .project-frame .link-btn {
+      padding: 15px; background: var(--cyan); color: #000;
+      text-align: center; font-weight: bold; text-transform: uppercase; border-radius: 5px;
+    }
+
+    /* =========================================
+       ROOM 2: CONTACT (Right Wall)
+       ========================================= */
+    .room-right {
+      position: absolute; top: 50%; left: 50%;
+      width: 1200px; height: 700px;
+      transform: translate(-50%, -50%) translateZ(-1200px) translateX(1000px) rotateY(-90deg);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .mailbox-terminal {
+      width: 400px; height: 200px;
+      background: rgba(255, 0, 127, 0.1);
+      border: 2px solid var(--pink);
+      border-radius: 20px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      box-shadow: 0 0 30px rgba(255, 0, 127, 0.3);
+      position: relative; z-index: 10;
+    }
+
+    .mailbox-terminal h3 { font-size: 2rem; margin: 0; color: var(--pink); letter-spacing: 3px; }
+    .mailbox-terminal svg { width: 50px; height: 50px; fill: var(--pink); margin-bottom: 10px; }
+
+    /* The glowing letter that pops up */
+    .contact-hologram {
+      position: absolute; top: 50px;
+      width: 350px; padding: 40px 20px;
+      background: var(--glass); backdrop-filter: blur(15px);
+      border: 1px solid var(--pink); border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 -20px 50px rgba(255, 0, 127, 0.2);
+      opacity: 0; transform: translateY(0) scale(0.8);
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 5; pointer-events: none;
+    }
+
+    .contact-hologram.open {
+      opacity: 1; transform: translateY(-250px) scale(1); pointer-events: auto;
+    }
+
+    .contact-hologram h4 { color: #fff; font-size: 1.5rem; margin-top: 0; border-bottom: 1px solid var(--pink); padding-bottom: 10px; }
+    .contact-hologram p { font-size: 1.2rem; color: var(--pink); font-weight: bold; letter-spacing: 1px; }
+
+    /* =========================================
+       UI CONTROLS
+       ========================================= */
+    #hud-back {
+      position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+      padding: 15px 40px; background: rgba(0, 0, 0, 0.8); color: #fff;
+      border: 2px solid #fff; border-radius: 30px;
+      font-size: 1.2rem; letter-spacing: 2px; cursor: pointer;
+      display: none; transition: 0.3s; z-index: 1000;
+    }
+    #hud-back:hover { background: #fff; color: #000; }
+
+    /* Animations */
+    @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+    @keyframes float { 0%, 100% { transform: translate(-50%, -50%) translateZ(-2500px) translateY(0); } 50% { transform: translate(-50%, -50%) translateZ(-2500px) translateY(-30px); } }
+
+    /* =========================================
+       MOBILE & TABLET RESPONSIVE QUERIES
+       ========================================= */
+    @media (max-width: 768px) {
+      .nameplate { margin-bottom: 20px; }
+      .door { width: 220px; height: 380px; }
+      .door::before { font-size: 1.2rem; }
+
+      /* Bring navigation nodes closer to the center aisle on mobile */
+      .nav-node { width: 140px; padding: 15px 10px; }
+      .nav-node h3 { font-size: 1rem; }
+      .nav-node p { font-size: 0.75rem; margin-bottom: 0; }
+      .node-left { transform: translate(-50%, -50%) translateZ(-1200px) translateX(-140px) rotateY(45deg); }
+      .node-right { transform: translate(-50%, -50%) translateZ(-1200px) translateX(140px) rotateY(-45deg); }
+
+      /* Shrink and stack the project wall for mobile screens */
+      .room-left { 
+        width: 340px; height: auto; 
+        flex-direction: column; gap: 20px; 
+        transform: translate(-50%, -50%) translateZ(-1200px) translateX(-400px) rotateY(90deg); 
+      }
+      .project-frame { 
+        width: 100%; height: auto; min-height: 200px; padding: 20px; 
+      }
+      .project-frame h3 { font-size: 1.4rem; margin-bottom: 10px; }
+      .project-frame p { font-size: 0.95rem; line-height: 1.4; margin-bottom: 20px; }
+      .project-frame .link-btn { padding: 10px; font-size: 0.9rem; }
+
+      /* Shrink the contact wall for mobile */
+      .room-right {
+        width: 320px;
+        transform: translate(-50%, -50%) translateZ(-1200px) translateX(400px) rotateY(-90deg); 
+      }
+      .mailbox-terminal { width: 280px; height: 150px; }
+      .mailbox-terminal h3 { font-size: 1.5rem; }
+      
+      .contact-hologram { width: 300px; padding: 25px 15px; }
+      .contact-hologram h4 { font-size: 1.2rem; }
+      .contact-hologram p { font-size: 1rem; }
+      .contact-hologram.open { transform: translateY(-180px) scale(1); }
+
+      #hud-back { font-size: 0.9rem; padding: 12px 25px; bottom: 20px; white-space: nowrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="viewport">
+    <div class="camera" id="camera">
+      
+      <!-- EXTERIOR (Z = 0) -->
+      <div class="portal-container" id="door">
+        <div class="nameplate">YASH VARDHAN SINGH[cite: 1]</div>
+        <div class="door clickable" onclick="enterGallery()"></div>
+      </div>
+
+      <!-- THE AISLE -->
+      <div class="floor-grid"></div>
+      
+      <div class="greeter">
+        <!-- Abstract glowing Namaste icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 1 1-8 0V6a4 4 0 0 1 4-4z"/>
+          <path d="M6 18c0-3.3 2.7-6 6-6s6 2.7 6 6"/>
+          <path d="M9 14l3 3 3-3"/>
+        </svg>
+        <h2>NAMASTE</h2>
+      </div>
+
+      <!-- Door nodes to click into rooms -->
+      <div class="nav-node node-left clickable" onclick="lookLeft()">
+        <h3 style="color: var(--cyan); margin:0;">ROOM 1</h3>
+        <p>View Projects</p>
+      </div>
+
+      <div class="nav-node node-right clickable" onclick="lookRight()">
+        <h3 style="color: var(--pink); margin:0;">ROOM 2</h3>
+        <p>Contact Info</p>
+      </div>
+
+      <!-- ROOM 1 (LEFT WALL) -->
+      <div class="room-left">
+        <a href="https://github.com/shekhawatyash" target="_blank" class="project-frame clickable" style="border-color: var(--cyan);">
+          <div>
+            <h3>Weather App[cite: 1]</h3>
+            <p>Built a web application that fetches and displays real-time weather data using a third-party weather API. Features JSON response parsing and dynamic frontend rendering.[cite: 1]</p>
+          </div>
+          <div class="link-btn">Access Repository[cite: 1]</div>
+        </a>
+
+        <a href="https://github.com/shekhawatyash" target="_blank" class="project-frame clickable" style="border-color: var(--cyan);">
+          <div>
+            <h3>GitHub Archive[cite: 1]</h3>
+            <p>Explore my full catalog of Full Stack Web Development projects, Python scripts, and Object-Oriented Java code.[cite: 1]</p>
+          </div>
+          <div class="link-btn">View All Code[cite: 1]</div>
+        </a>
+      </div>
+
+      <!-- ROOM 2 (RIGHT WALL) -->
+      <div class="room-right">
+        <div style="position: relative; display: flex; justify-content: center;">
+          
+          <!-- The Holographic Letter -->
+          <div class="contact-hologram" id="mailData">
+            <h4>DIRECT COMMS</h4>
+            <p>yashshekhawat022@gmail.com[cite: 1]</p>
+            <p>9430096031[cite: 1]</p>
+          </div>
+          
+          <!-- The Mailbox Terminal -->
+          <div class="mailbox-terminal clickable" onclick="toggleMail()">
+            <!-- Mail Icon -->
+            <svg viewBox="0 0 24 24">
+              <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+            </svg>
+            <h3>INBOX</h3>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <button id="hud-back" onclick="navigateBack()">RETURN TO AISLE</button>
+
+  <script>
+    let currentPos = 'outside';
+
+    function enterGallery() {
+      // Fade out the door
+      gsap.to('#door', { opacity: 0, duration: 0.5 });
+      
+      // Move camera inside to the aisle
+      gsap.to('#camera', { 
+        z: -500, x: 0, rotationY: 0, 
+        duration: 2, ease: "power3.inOut" 
+      });
+      
+      currentPos = 'aisle';
+    }
+
+    function lookLeft() {
+      // Dynamic camera positioning based on screen size so mobile isn't clipped
+      const isMobile = window.innerWidth <= 768;
+      const targetX = isMobile ? -50 : -450; 
+      
+      gsap.to('#camera', { 
+        z: -1200, x: targetX, rotationY: -90, 
+        duration: 1.5, ease: "power2.inOut" 
+      });
+      currentPos = 'room1';
+      showHUD('RETURN TO AISLE');
+    }
+
+    function lookRight() {
+      // Dynamic camera positioning
+      const isMobile = window.innerWidth <= 768;
+      const targetX = isMobile ? 50 : 450;
+
+      gsap.to('#camera', { 
+        z: -1200, x: targetX, rotationY: 90, 
+        duration: 1.5, ease: "power2.inOut" 
+      });
+      currentPos = 'room2';
+      showHUD('RETURN TO AISLE');
+    }
+
+    function navigateBack() {
+      // Reset camera to the Aisle
+      gsap.to('#camera', { 
+        z: -500, x: 0, rotationY: 0, 
+        duration: 1.5, ease: "power2.inOut" 
+      });
+      currentPos = 'aisle';
+      document.getElementById('hud-back').style.display = 'none';
+      
+      // Close mail if it was open
+      document.getElementById('mailData').classList.remove('open');
+    }
+
+    function toggleMail() {
+      document.getElementById('mailData').classList.toggle('open');
+    }
+
+    function showHUD(text) {
+      const btn = document.getElementById('hud-back');
+      btn.innerText = text;
+      btn.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>QuickKart - Groceries in Minutes</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+
+        <div class="logo">
+            <span>Quick</span>Kart
+        </div>
+
+        <div class="delivery">
+            <small>Delivery in</small>
+            <strong>10 minutes</strong>
+        </div>
+
+        <div class="location">
+            📍 <span>Jaipur, Rajasthan</span>
+        </div>
+
+        <div class="search-box">
+            🔍
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search for products..."
+            >
+        </div>
+
+        <button class="login-btn">
+            Login
+        </button>
+
+        <button class="cart-btn" onclick="openCart()">
+            🛒 Cart
+            <span id="cartCount">0</span>
+        </button>
+
+    </header>
+
+
+    <!-- HERO -->
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <h1>
+                Groceries delivered<br>
+                <span>in minutes ⚡</span>
+            </h1>
+
+            <p>
+                Fresh groceries, snacks, beverages and daily essentials
+                delivered straight to your doorstep.
+            </p>
+
+            <button class="shop-btn" onclick="scrollToProducts()">
+                Shop Now →
+            </button>
+
+        </div>
+
+        <div class="hero-image">
+            🛒
+        </div>
+
+    </section>
+
+
+    <!-- CATEGORIES -->
+    <section class="section">
+
+        <h2>Shop by Category</h2>
+
+        <div class="categories">
+
+            <div class="category" onclick="filterCategory('Fruits')">
+                <div class="category-icon">🍎</div>
+                <p>Fruits</p>
+            </div>
+
+            <div class="category" onclick="filterCategory('Vegetables')">
+                <div class="category-icon">🥦</div>
+                <p>Vegetables</p>
+            </div>
+
+            <div class="category" onclick="filterCategory('Dairy')">
+                <div class="category-icon">🥛</div>
+                <p>Dairy</p>
+            </div>
+
+            <div class="category" onclick="filterCategory('Snacks')">
+                <div class="category-icon">🍿</div>
+                <p>Snacks</p>
+            </div>
+
+            <div class="category" onclick="filterCategory('Beverages')">
+                <div class="category-icon">🥤</div>
+                <p>Beverages</p>
+            </div>
+
+            <div class="category" onclick="filterCategory('Bakery')">
+                <div class="category-icon">🍞</div>
+                <p>Bakery</p>
+            </div>
+
+            <div class="category" onclick="filterCategory('Personal Care')">
+                <div class="category-icon">🧴</div>
+                <p>Personal Care</p>
+            </div>
+
+            <div class="category" onclick="showAllProducts()">
+                <div class="category-icon">🛍️</div>
+                <p>All</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- PRODUCTS -->
+    <section class="section products-section" id="products">
+
+        <div class="section-heading">
+
+            <h2>Popular Products</h2>
+
+            <button onclick="showAllProducts()" class="view-all">
+                View All
+            </button>
+
+        </div>
+
+        <div id="productGrid" class="products"></div>
+
+    </section>
+
+
+    <!-- CART OVERLAY -->
+    <div id="cartOverlay" class="cart-overlay" onclick="closeCart()"></div>
+
+
+    <!-- CART SIDEBAR -->
+    <aside id="cartSidebar" class="cart-sidebar">
+
+        <div class="cart-header">
+
+            <h2>Your Cart</h2>
+
+            <button onclick="closeCart()" class="close-btn">
+                ✕
+            </button>
+
+        </div>
+
+        <div id="cartItems" class="cart-items"></div>
+
+        <div class="cart-bottom">
+
+            <div class="bill-row">
+                <span>Subtotal</span>
+                <strong id="subtotal">₹0</strong>
+            </div>
+
+            <div class="bill-row">
+                <span>Delivery Fee</span>
+                <strong>₹25</strong>
+            </div>
+
+            <hr>
+
+            <div class="bill-row total">
+                <span>Total</span>
+                <strong id="total">₹25</strong>
+            </div>
+
+            <button class="checkout-btn" onclick="checkout()">
+                Proceed to Checkout
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- FOOTER -->
+    <footer>
+
+        <div class="footer-logo">
+            QuickKart
+        </div>
+
+        <p>
+            Your everyday groceries delivered quickly.
+        </p>
+
+        <div class="footer-links">
+            <span>About Us</span>
+            <span>Contact</span>
+            <span>Privacy Policy</span>
+            <span>Terms</span>
+        </div>
+
+        <p class="copyright">
+            © 2026 QuickKart. All rights reserved.
+        </p>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
